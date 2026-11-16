@@ -20,6 +20,16 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+      - name: Validate PWA files
+        run: |
+          node --check config.js
+          node --check sw.js
+          python3 -m json.tool manifest.webmanifest > /dev/null
+          test -f index.html
+          test -f icons/icon-192.svg
+          test -f icons/icon-512.svg
+          grep -q 'rel="manifest"' index.html
+          grep -q "serviceWorker.register" index.html
       - name: Configure Pages
         uses: actions/configure-pages@v5
         with:
