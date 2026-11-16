@@ -17,6 +17,12 @@ The installable PWA shell, manifest, service worker, SVG icons, and GitHub Pages
 
 The original Apps Script interface uses `google.script.run`. That bridge is available only inside Apps Script HTML Service pages and cannot be called directly from a GitHub Pages origin. The current safe first stage therefore prepares the PWA shell without pretending that Google Sheets read/write integration is already working.
 
+## Data integrity baseline
+
+The project owner has confirmed that the live Google Sheets data contains **15 portal records**. A previous issue caused by two columns being placed in the wrong order has already been corrected in the source spreadsheet. Treat the corrected live sheet as authoritative. Do not replace it with the 13-entry bootstrap/fallback array found in the legacy Apps Script source.
+
+The PWA launcher must preserve the existing Apps Script application and its Google Sheets backend. The existing Apps Script HTML uses `google.script.run`, so its data operations remain inside the Apps Script-hosted application; this static GitHub Pages shell currently launches that application rather than attempting unsupported direct calls to `google.script.run`.
+
 ## Next integration gate
 
 1. Confirm the production Apps Script deployment URL ending in `/exec`.
