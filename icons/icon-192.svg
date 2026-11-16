@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="192" height="192" viewBox="0 0 192 192">
+<rect width="192" height="192" rx="38" fill="#17365D"/>
+<path d="M96 25 153 49v44c0 37-24 60-57 76-33-16-57-39-57-76V49z" fill="#fff" opacity=".12"/>
+<path d="M96 35 143 55v37c0 30-18 50-47 65-29-15-47-35-47-65V55z" fill="none" stroke="#D6A642" stroke-width="5"/>
+<text x="96" y="91" text-anchor="middle" font-family="Arial,sans-serif" font-size="34" font-weight="800" fill="#fff">UPK</text>
+<path d="M59 111h74" stroke="#D6A642" stroke-width="6" stroke-linecap="round"/>
+<text x="96" y="137" text-anchor="middle" font-family="Arial,sans-serif" font-size="15" font-weight="700" fill="#fff">KANOWIT</text>
+</svg>
