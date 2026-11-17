@@ -1,0 +1,13 @@
+plugins { id 'com.android.application' }
+
+android {
+    namespace 'my.gov.moe.upkkanowit'
+    compileSdk 35
+    defaultConfig {
+        applicationId 'my.gov.moe.upkkanowit'
+        minSdk 23
+        targetSdk 35
+        versionCode 1
+        versionName '2.0.0'
+    }
+}
