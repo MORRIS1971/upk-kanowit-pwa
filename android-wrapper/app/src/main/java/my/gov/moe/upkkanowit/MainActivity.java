@@ -63,30 +63,42 @@ public class MainActivity extends Activity {
       }
       @Override public void onPageFinished(WebView view, String url) {
         super.onPageFinished(view, url);
-        // Final mobile layout guard: correct horizontal overflow even when the hosted
-        // Apps Script HTML contains desktop-sized children or restrictive min-widths.
-        String mobileCss =
-          "html,body{width:100%!important;max-width:100%!important;margin:0!important;padding:0!important;overflow-x:hidden!important}" +
-          "*,*:before,*:after{box-sizing:border-box!important;min-width:0}" +
-          ".layout{display:flex!important;flex-direction:column!important;width:100%!important;max-width:100%!important;min-width:0!important;overflow-x:hidden!important}" +
-          ".side{width:100%!important;max-width:100%!important;min-width:0!important}" +
-          ".nav{display:flex!important;max-width:100%!important;overflow-x:auto!important;overscroll-behavior-x:contain}" +
-          ".nav button{flex:0 0 auto!important;white-space:nowrap!important}" +
-          "main,.top,.content{display:block;float:none!important;width:100%!important;max-width:100%!important;min-width:0!important;margin-left:0!important;margin-right:0!important}" +
-          ".top{display:flex!important;flex-wrap:wrap!important;align-items:center!important;gap:8px!important;padding:10px 12px!important}" +
-          ".content{padding:14px 12px 28px!important;overflow-x:hidden!important}" +
-          ".hero,.panel,.stat,.portal,.request,.notice,.foot{width:100%!important;max-width:100%!important;min-width:0!important;overflow-wrap:anywhere!important;word-break:normal!important}" +
-          ".hero{padding:20px 16px!important}" +
-          ".hero h1,.hero p,.section h2,.section p,.portal h3,.request h4,.request p{max-width:100%!important;white-space:normal!important;overflow-wrap:anywhere!important;word-break:normal!important}" +
-          ".stats,.grid,.formgrid{display:grid!important;grid-template-columns:minmax(0,1fr)!important;width:100%!important;max-width:100%!important;min-width:0!important}" +
-          ".stat,.portal,.request{padding:13px!important}" +
-          ".request h4{font-size:15px!important;line-height:1.45!important}" +
-          ".request p{font-size:14px!important;line-height:1.7!important}" +
-          ".portal .actions,.request .actions,.tools,.section,.foot{max-width:100%!important;flex-wrap:wrap!important}" +
-          "input,select,textarea,button,a{max-width:100%!important;overflow-wrap:anywhere!important}" +
-          ".modalback{overflow-y:auto!important}.modal{width:100%!important;max-width:100%!important}";
-        String script = "(function(){var id='upk-android-mobile-fix';var s=document.getElementById(id);if(!s){s=document.createElement('style');s.id=id;(document.head||document.documentElement).appendChild(s);}s.textContent=" +
-          JSONObject.quote(mobileCss) + ";document.documentElement.style.setProperty('overflow-x','hidden','important');document.body.style.setProperty('overflow-x','hidden','important');})();";
+        // Establish the real handset CSS viewport before responsive rules are applied.
+        String script =
+          "(function(){" +
+          "var w=(window.screen&&screen.width)?screen.width:window.innerWidth;" +
+          "if(!w||w<240)w=window.innerWidth||360;" +
+          "var vp=document.querySelector('meta[name=viewport]');" +
+          "if(!vp){vp=document.createElement('meta');vp.name='viewport';(document.head||document.documentElement).appendChild(vp);}" +
+          "vp.setAttribute('content','width='+w+', initial-scale=1, maximum-scale=1, user-scalable=no');" +
+          "var id='upk-responsive-v3',st=document.getElementById(id);" +
+          "if(!st){st=document.createElement('style');st.id=id;(document.head||document.documentElement).appendChild(st);}" +
+          "st.textContent=" +
+          "'html,body{width:'+w+'px!important;max-width:'+w+'px!important;min-width:0!important;margin:0!important;padding:0!important;overflow-x:hidden!important}'+" +
+          "'*,*:before,*:after{box-sizing:border-box!important;min-width:0!important;max-width:100%}'+ " +
+          "'.layout{display:flex!important;flex-direction:column!important;width:100%!important;max-width:100%!important;min-width:0!important;overflow-x:hidden!important}'+ " +
+          "'.side{width:100%!important;max-width:100%!important;min-width:0!important}'+ " +
+          "'.brand{max-width:100%!important;flex-wrap:nowrap!important}'+ " +
+          "'.nav{display:flex!important;width:100%!important;max-width:100%!important;min-width:0!important;overflow-x:auto!important;overflow-y:hidden!important;flex-wrap:nowrap!important}'+ " +
+          "'.nav button{flex:0 0 auto!important;white-space:nowrap!important}'+ " +
+          "'main,.top,.content{width:100%!important;max-width:100%!important;min-width:0!important;margin-left:0!important;margin-right:0!important}'+ " +
+          "'.top{display:flex!important;flex-wrap:wrap!important;gap:8px!important;padding:10px 12px!important}'+ " +
+          "'.content{padding:14px 12px 28px!important;overflow-x:hidden!important}'+ " +
+          "'.hero,.panel,.stat,.portal,.request,.notice,.foot{width:100%!important;max-width:100%!important;min-width:0!important;margin-left:0!important;margin-right:0!important;overflow-wrap:anywhere!important}'+ " +
+          "'.hero{padding:20px 16px!important}'+ " +
+          "'.hero h1,.hero p,.section h2,.section p,.portal h3,.request h4,.request p{white-space:normal!important;overflow-wrap:anywhere!important;word-break:normal!important}'+ " +
+          "'.stats,.grid,.formgrid{display:grid!important;grid-template-columns:minmax(0,1fr)!important;gap:10px!important;width:100%!important;max-width:100%!important;min-width:0!important}'+ " +
+          "'.stat,.portal,.request{padding:13px!important}'+ " +
+          "'.request h4{font-size:15px!important;line-height:1.45!important}'+ " +
+          "'.request p{font-size:14px!important;line-height:1.7!important}'+ " +
+          "'.section,.tools,.foot,.portal .actions,.request .actions{max-width:100%!important;flex-wrap:wrap!important}'+ " +
+          "'input,select,textarea,button,a{max-width:100%!important;overflow-wrap:anywhere!important}'+ " +
+          "'.modalback{overflow-y:auto!important}.modal{width:100%!important;max-width:100%!important}';" +
+          "document.documentElement.style.setProperty('width',w+'px','important');" +
+          "document.documentElement.style.setProperty('max-width',w+'px','important');" +
+          "document.body.style.setProperty('width',w+'px','important');" +
+          "document.body.style.setProperty('max-width',w+'px','important');" +
+          "})();";
         view.evaluateJavascript(script, null);
       }
     });
