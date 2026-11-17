@@ -14,7 +14,6 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.graphics.Color;
 import android.view.Window;
-import android.content.pm.ActivityInfo;
 
 public class MainActivity extends Activity {
   private WebView web;
@@ -22,7 +21,6 @@ public class MainActivity extends Activity {
 
   @Override public void onCreate(Bundle state) {
     super.onCreate(state);
-    setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
     Window window = getWindow();
     window.setStatusBarColor(Color.rgb(23, 54, 93));
     window.setNavigationBarColor(Color.rgb(23, 54, 93));
@@ -43,8 +41,9 @@ public class MainActivity extends Activity {
     settings.setDomStorageEnabled(true);
     settings.setDatabaseEnabled(true);
     settings.setJavaScriptCanOpenWindowsAutomatically(true);
-    // Portal links with target="_blank" must remain navigable in this single WebView.
+    // Keep target="_blank" portal links in this WebView.
     settings.setSupportMultipleWindows(false);
+    // Respect the page viewport and allow the device to rotate naturally.
     settings.setUseWideViewPort(true);
     settings.setLoadWithOverviewMode(false);
     settings.setTextZoom(100);
@@ -69,7 +68,7 @@ public class MainActivity extends Activity {
     Uri uri = Uri.parse(value);
     String scheme = uri.getScheme() == null ? "" : uri.getScheme().toLowerCase();
     if ("https".equals(scheme) || "http".equals(scheme)) {
-      return false; // Let the selected portal load in this WebView.
+      return false;
     }
     if ("mailto".equals(scheme) || "tel".equals(scheme)) {
       try {
@@ -77,7 +76,7 @@ public class MainActivity extends Activity {
       } catch (Exception ignored) { }
       return true;
     }
-    return true; // Block unsupported schemes rather than navigating unpredictably.
+    return true;
   }
 
   @Override public boolean onKeyDown(int keyCode, KeyEvent event) {
