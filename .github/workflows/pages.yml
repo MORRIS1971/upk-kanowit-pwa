@@ -36,13 +36,12 @@ jobs:
         run: |
           python3 - <<'PY'
           from pathlib import Path
-          import re
           import xml.etree.ElementTree as ET
           html = Path("index.html").read_text(encoding="utf-8")
-          scripts = re.findall(r"<script(?:\\s[^>]*)?>([\\s\\S]*?)</script>", html)
-          if not scripts or not scripts[-1].strip():
+          if "<script>" not in html or "</script>" not in html:
               raise SystemExit("Inline launcher script not found")
-          Path("/tmp/upk-launcher.js").write_text(scripts[-1], encoding="utf-8")
+          script = html.split("<script>", 1)[1].split("</script>", 1)[0]
+          Path("/tmp/upk-launcher.js").write_text(script, encoding="utf-8")
           for icon in ["icons/icon-192.svg", "icons/icon-512.svg"]:
               ET.parse(icon)
           PY
