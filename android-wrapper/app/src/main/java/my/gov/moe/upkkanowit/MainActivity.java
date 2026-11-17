@@ -48,7 +48,7 @@ public class MainActivity extends Activity {
     settings.setJavaScriptCanOpenWindowsAutomatically(true);
 
     // Use the page's viewport meta tag and mobile CSS media queries.
-    settings.setUseWideViewPort(false);
+    settings.setUseWideViewPort(true);
     settings.setLoadWithOverviewMode(false);
     settings.setTextZoom(100);
     settings.setMixedContentMode(WebSettings.MIXED_CONTENT_COMPATIBILITY_MODE);
