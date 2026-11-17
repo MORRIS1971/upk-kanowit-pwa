@@ -97,7 +97,7 @@ public class MainActivity extends Activity {
           "'.search,.filter,.field,input,select,textarea{width:100%!important;max-width:100%!important;min-width:0!important}'+ " +
           "'.modalback{overflow-y:auto!important}.modal{width:100%!important;max-width:100%!important}'+ " +
           "'.state{max-width:100%!important;overflow-wrap:anywhere!important}'+ " +
-          '}';" +
+          "'}';" +
           "})();";
         view.evaluateJavascript(script, null);
       }
