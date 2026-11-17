@@ -28,7 +28,7 @@ jobs:
           test -f icons/icon-512.svg
           grep -q 'rel="manifest"' index.html
           grep -q "serviceWorker.register" index.html
-          grep -q 'appsScriptUrl: ""' config.js
+          grep -Eq 'appsScriptUrl: "https://script\\.google\\.com/macros/s/[^\"]+/exec"' config.js
       - name: Validate inline launcher JavaScript and SVG assets
         run: |
           python3 - <<'PY'
