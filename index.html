@@ -86,7 +86,7 @@
       if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
           navigator.serviceWorker.register('./sw.js').then(() => {
-            status.textContent = 'PWA sedia. Aplikasi utama akan dihubungkan selepas URL deployment disahkan.';
+            status.textContent = 'PWA sedia dan telah dipautkan kepada deployment V2. Tekan Buka Aplikasi Utama untuk meneruskan.';
           }).catch(() => {
             status.textContent = 'PWA boleh dibuka, tetapi pendaftaran mod luar talian gagal pada pelayar ini.';
           });
