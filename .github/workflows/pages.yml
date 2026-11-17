@@ -29,6 +29,20 @@ jobs:
           grep -q 'rel="manifest"' index.html
           grep -q "serviceWorker.register" index.html
           grep -q 'appsScriptUrl: ""' config.js
+      - name: Validate inline launcher JavaScript and SVG assets
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import xml.etree.ElementTree as ET
+          html = Path("index.html").read_text(encoding="utf-8")
+          if "<script>" not in html or "</script>" not in html:
+              raise SystemExit("Launcher script not found")
+          script = html.split("<script>", 1)[1].split("</script>", 1)[0]
+          Path("/tmp/upk-launcher.js").write_text(script, encoding="utf-8")
+          for icon in ["icons/icon-192.svg", "icons/icon-512.svg"]:
+              ET.parse(icon)
+          PY
+          node --check /tmp/upk-launcher.js
       - name: Validate staging security boundary
         run: |
           ! grep -Eiq 'UPK_ADMIN_PIN|UPK_ADMIN_PIN_SHA256|UPK_TEST_SPREADSHEET_ID' config.js
