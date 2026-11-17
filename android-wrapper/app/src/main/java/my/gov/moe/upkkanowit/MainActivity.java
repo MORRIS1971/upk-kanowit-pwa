@@ -14,6 +14,7 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.graphics.Color;
 import android.view.Window;
+import android.content.pm.ActivityInfo;
 
 public class MainActivity extends Activity {
   private WebView web;
@@ -21,6 +22,7 @@ public class MainActivity extends Activity {
 
   @Override public void onCreate(Bundle state) {
     super.onCreate(state);
+    setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
     Window window = getWindow();
     window.setStatusBarColor(Color.rgb(23, 54, 93));
     window.setNavigationBarColor(Color.rgb(23, 54, 93));
@@ -44,7 +46,7 @@ public class MainActivity extends Activity {
     // Portal links with target="_blank" must remain navigable in this single WebView.
     settings.setSupportMultipleWindows(false);
     settings.setUseWideViewPort(true);
-    settings.setLoadWithOverviewMode(true);
+    settings.setLoadWithOverviewMode(false);
     settings.setTextZoom(100);
     settings.setBuiltInZoomControls(false);
     settings.setDisplayZoomControls(false);
