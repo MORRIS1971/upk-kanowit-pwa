@@ -18,6 +18,7 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
       - name: Validate JavaScript, manifest and app shell
         run: |
           node --check config.js
@@ -26,27 +27,32 @@ jobs:
           test -f index.html
           test -f icons/icon-192.svg
           test -f icons/icon-512.svg
-          grep -q 'rel="manifest"' index.html
-          grep -q "serviceWorker.register" index.html
-          grep -Eq 'appsScriptUrl: "https://script\\.google\\.com/macros/s/[^\"]+/exec"' config.js
+          grep -Fq 'rel="manifest"' index.html
+          grep -Fq 'serviceWorker.register' index.html
+          grep -Fq 'appsScriptUrl: "https://script.google.com/macros/s/' config.js
+          grep -Fq '/exec"' config.js
+
       - name: Validate inline launcher JavaScript and SVG assets
         run: |
           python3 - <<'PY'
           from pathlib import Path
+          import re
           import xml.etree.ElementTree as ET
           html = Path("index.html").read_text(encoding="utf-8")
-          if "<script>" not in html or "</script>" not in html:
-              raise SystemExit("Launcher script not found")
-          script = html.split("<script>", 1)[1].split("</script>", 1)[0]
-          Path("/tmp/upk-launcher.js").write_text(script, encoding="utf-8")
+          scripts = re.findall(r"<script(?:\\s[^>]*)?>([\\s\\S]*?)</script>", html)
+          if not scripts or not scripts[-1].strip():
+              raise SystemExit("Inline launcher script not found")
+          Path("/tmp/upk-launcher.js").write_text(scripts[-1], encoding="utf-8")
           for icon in ["icons/icon-192.svg", "icons/icon-512.svg"]:
               ET.parse(icon)
           PY
           node --check /tmp/upk-launcher.js
+
       - name: Validate staging security boundary
         run: |
           ! grep -Eiq 'UPK_ADMIN_PIN|UPK_ADMIN_PIN_SHA256|UPK_TEST_SPREADSHEET_ID' config.js
-          grep -q 'V2 staging' V2-INTEGRATION.md
+          grep -Fq 'V2 staging' V2-INTEGRATION.md
           test "${GITHUB_REF_NAME}" = "upk-v2-staging"
+
       - name: Report
         run: echo "UPK V2 staging source validation passed."
