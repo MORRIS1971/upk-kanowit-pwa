@@ -2,12 +2,13 @@ plugins { id 'com.android.application' }
 
 android {
     namespace 'my.gov.moe.upkkanowit'
-    compileSdk 35
+    compileSdk 34
+
     defaultConfig {
         applicationId 'my.gov.moe.upkkanowit'
-        minSdk 23
-        targetSdk 35
-        versionCode 1
-        versionName '2.0.0'
+        minSdk 21
+        targetSdk 34
+        versionCode 2
+        versionName '2.0.1'
     }
 }
