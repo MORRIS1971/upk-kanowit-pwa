@@ -63,45 +63,41 @@ public class MainActivity extends Activity {
       }
       @Override public void onPageFinished(WebView view, String url) {
         super.onPageFinished(view, url);
-        // Use the handset CSS viewport and apply distinct phone/tablet breakpoints.
+        // Keep the existing desktop layout untouched. Apply responsive rules only on
+        // narrow screens, using the CSS viewport rather than physical screen pixels.
         String script =
           "(function(){" +
-          "function applyUPKResponsive(){" +
-          "var w=(window.screen&&screen.width)?screen.width:window.innerWidth;" +
-          "if(!w||w<240)w=window.innerWidth||360;" +
           "var vp=document.querySelector('meta[name=viewport]');" +
           "if(!vp){vp=document.createElement('meta');vp.name='viewport';(document.head||document.documentElement).appendChild(vp);}" +
-          "vp.setAttribute('content','width='+w+', initial-scale=1, maximum-scale=1, user-scalable=no');" +
-          "var id='upk-responsive-v4',st=document.getElementById(id);" +
+          "vp.setAttribute('content','width=device-width, initial-scale=1');" +
+          "var id='upk-phone-layout-v5',st=document.getElementById(id);" +
           "if(!st){st=document.createElement('style');st.id=id;(document.head||document.documentElement).appendChild(st);}" +
-          "var css='html,body{width:'+w+'px!important;max-width:'+w+'px!important;min-width:0!important;margin:0!important;padding:0!important;overflow-x:hidden!important}';" +
-          "if(w<=820){" +
-          "css+='*,*:before,*:after{box-sizing:border-box!important;min-width:0!important;max-width:100%}'+ " +
+          "st.textContent=" +
+          "'@media screen and (max-width:820px){'+ " +
+          "'html,body{width:100%!important;max-width:100%!important;min-width:0!important;margin:0!important;overflow-x:hidden!important}'+ " +
+          "'*,*:before,*:after{box-sizing:border-box!important}'+ " +
           "'.layout{display:flex!important;flex-direction:column!important;width:100%!important;max-width:100%!important;min-width:0!important;overflow-x:hidden!important}'+ " +
-          "'.side{width:100%!important;max-width:100%!important;min-width:0!important}'+ " +
-          "'.brand{max-width:100%!important;flex-wrap:nowrap!important}'+ " +
-          "'.nav{display:flex!important;width:100%!important;max-width:100%!important;min-width:0!important;overflow-x:auto!important;overflow-y:hidden!important;flex-wrap:nowrap!important}'+ " +
+          "'.side{display:flex!important;flex-direction:column!important;width:100%!important;max-width:100%!important;min-width:0!important;padding:10px 12px!important;gap:9px!important}'+ " +
+          "'.brand{width:100%!important;max-width:100%!important;min-width:0!important;padding:3px 4px 10px!important}'+ " +
+          "'.navlabel,.sidefoot{display:none!important}'+ " +
+          "'.nav{display:flex!important;flex-direction:row!important;flex-wrap:nowrap!important;width:100%!important;max-width:100%!important;min-width:0!important;overflow-x:auto!important;overflow-y:hidden!important}'+ " +
           "'.nav button{flex:0 0 auto!important;white-space:nowrap!important}'+ " +
-          "'main,.top,.content{width:100%!important;max-width:100%!important;min-width:0!important;margin-left:0!important;margin-right:0!important}'+ " +
-          "'.top{display:flex!important;flex-wrap:wrap!important;gap:8px!important;padding:10px 12px!important}'+ " +
-          "'.content{padding:14px 12px 28px!important;overflow-x:hidden!important}'+ " +
-          "'.hero,.panel,.stat,.portal,.request,.notice,.foot{width:100%!important;max-width:100%!important;min-width:0!important;margin-left:0!important;margin-right:0!important;overflow-wrap:anywhere!important}'+ " +
-          "'.hero{padding:20px 16px!important}'+ " +
-          "'.hero h1,.hero p,.section h2,.section p,.portal h3,.request h4,.request p{white-space:normal!important;overflow-wrap:anywhere!important;word-break:normal!important}'+ " +
-          "'.section,.tools,.foot,.portal .actions,.request .actions{max-width:100%!important;flex-wrap:wrap!important}'+ " +
-          "'input,select,textarea,button,a{max-width:100%!important;overflow-wrap:anywhere!important}'+ " +
-          "'.modalback{overflow-y:auto!important}.modal{width:100%!important;max-width:100%!important}';" +
-          "if(w<=540){css+='.stats,.grid,.formgrid{display:grid!important;grid-template-columns:minmax(0,1fr)!important;gap:10px!important;width:100%!important;max-width:100%!important;min-width:0!important}'+'.request h4{font-size:15px!important;line-height:1.45!important}'+'.request p{font-size:14px!important;line-height:1.7!important}'+'.stat,.portal,.request{padding:13px!important}';}" +
-          "else{css+='.grid{display:grid!important;grid-template-columns:repeat(2,minmax(0,1fr))!important;width:100%!important;max-width:100%!important}'+'.stats{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;width:100%!important;max-width:100%!important}'+'.formgrid{grid-template-columns:repeat(2,minmax(0,1fr))!important}';}" +
-          "}" +
-          "st.textContent=css;" +
-          "document.documentElement.style.setProperty('width',w+'px','important');" +
-          "document.documentElement.style.setProperty('max-width',w+'px','important');" +
-          "document.body.style.setProperty('width',w+'px','important');" +
-          "document.body.style.setProperty('max-width',w+'px','important');" +
-          "}" +
-          "applyUPKResponsive();" +
-          "if(!window.__upkResponsiveListener){window.addEventListener('resize',applyUPKResponsive);window.addEventListener('orientationchange',function(){setTimeout(applyUPKResponsive,250);});window.__upkResponsiveListener=true;}" +
+          "'main{display:block!important;width:100%!important;max-width:100%!important;min-width:0!important;overflow-x:hidden!important}'+ " +
+          "'.top{width:100%!important;max-width:100%!important;min-width:0!important;display:flex!important;flex-wrap:wrap!important;gap:8px!important;padding:10px 12px!important}'+ " +
+          "'.content{width:100%!important;max-width:100%!important;min-width:0!important;margin:0!important;padding:14px 12px 28px!important;overflow-x:hidden!important}'+ " +
+          "'.hero,.panel,.stat,.portal,.request,.notice,.foot{width:100%!important;max-width:100%!important;min-width:0!important;margin-left:0!important;margin-right:0!important}'+ " +
+          "'.hero{padding:20px 16px!important;overflow:hidden!important}'+ " +
+          "'.hero h1,.hero p,.section h2,.section p,.portal h3,.request h4,.request p{max-width:100%!important;white-space:normal!important;overflow-wrap:anywhere!important;word-break:normal!important}'+ " +
+          "'.stats,.grid,.formgrid{display:grid!important;grid-template-columns:minmax(0,1fr)!important;width:100%!important;max-width:100%!important;min-width:0!important;gap:10px!important}'+ " +
+          "'.stat,.portal,.request{padding:13px!important}'+ " +
+          "'.request p{font-size:14px!important;line-height:1.7!important}'+ " +
+          "'.request h4{font-size:15px!important;line-height:1.45!important}'+ " +
+          "'.section{display:flex!important;flex-direction:column!important;align-items:flex-start!important;max-width:100%!important}'+ " +
+          "'.tools,.foot,.portal .actions,.request .actions{display:flex!important;flex-wrap:wrap!important;max-width:100%!important}'+ " +
+          "'.search,.filter,.field,input,select,textarea{width:100%!important;max-width:100%!important;min-width:0!important}'+ " +
+          "'.modalback{overflow-y:auto!important}.modal{width:100%!important;max-width:100%!important}'+ " +
+          "'.state{max-width:100%!important;overflow-wrap:anywhere!important}'+ " +
+          '}';" +
           "})();";
         view.evaluateJavascript(script, null);
       }
