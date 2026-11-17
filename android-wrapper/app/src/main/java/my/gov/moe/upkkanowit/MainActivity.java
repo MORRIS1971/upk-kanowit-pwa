@@ -47,22 +47,21 @@ public class MainActivity extends Activity {
     settings.setDatabaseEnabled(true);
     settings.setJavaScriptCanOpenWindowsAutomatically(true);
 
-    // The Apps Script HTML response must include the viewport meta tag.
-    // With that tag, WebView uses the handset CSS viewport and activates
-    // the existing mobile media queries instead of a desktop-width layout.
+    // Use the page's viewport meta tag and mobile CSS media queries.
     settings.setUseWideViewPort(true);
     settings.setLoadWithOverviewMode(false);
     settings.setTextZoom(100);
-    settings.setInitialScale(0);
     settings.setMixedContentMode(WebSettings.MIXED_CONTENT_COMPATIBILITY_MODE);
+
+    // Initial scale is a WebView method, not a WebSettings method.
+    web.setInitialScale(0);
 
     settings.setBuiltInZoomControls(false);
     settings.setDisplayZoomControls(false);
     settings.setAllowFileAccess(false);
     settings.setAllowContentAccess(true);
 
-    // Keep target=_blank/window.open in this WebView so the URL callback
-    // below can route Apps Script internally and all other web links out.
+    // Keep target=_blank/window.open in this WebView for URL routing below.
     settings.setSupportMultipleWindows(false);
 
     web.setWebChromeClient(new WebChromeClient());
@@ -94,8 +93,7 @@ public class MainActivity extends Activity {
     }
 
     if ("https".equals(scheme) || "http".equals(scheme)) {
-      // Preserve Apps Script HTML Service redirects and Google sign-in
-      // inside WebView. External portal destinations open in the browser.
+      // Keep Apps Script HTML Service redirects and Google sign-in internal.
       if ("script.google.com".equals(host)
           || "script.googleusercontent.com".equals(host)
           || "accounts.google.com".equals(host)) {
