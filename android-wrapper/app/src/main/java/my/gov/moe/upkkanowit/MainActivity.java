@@ -43,8 +43,8 @@ public class MainActivity extends Activity {
     settings.setJavaScriptCanOpenWindowsAutomatically(true);
     // Keep target="_blank" portal links in this WebView.
     settings.setSupportMultipleWindows(false);
-    // Respect the page viewport and allow the device to rotate naturally.
-    settings.setUseWideViewPort(true);
+    // Use the physical device width as the CSS layout viewport so portrait media queries activate.
+    settings.setUseWideViewPort(false);
     settings.setLoadWithOverviewMode(false);
     settings.setTextZoom(100);
     settings.setBuiltInZoomControls(false);
