@@ -1,6 +1,6 @@
 'use strict';
 
-const CACHE_NAME = 'upk-kanowit-pwa-v2-staging';
+const CACHE_NAME = 'upk-kanowit-pwa-v2-staging-connected';
 const APP_SHELL = [
   './',
   './index.html',
