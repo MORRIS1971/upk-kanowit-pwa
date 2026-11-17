@@ -18,6 +18,7 @@ import android.webkit.WebViewClient;
 public class MainActivity extends Activity {
   private WebView web;
 
+  // Confirmed V2 development deployment; production backend is not changed.
   private static final String APP_URL =
       "https://script.google.com/macros/s/AKfycbzQJRfDghFrKUzcolSou6wg4lxp16lWZglo-vSAY_QsxNJRUEYrDBP1P89EttRtAL3z/exec";
 
@@ -36,9 +37,9 @@ public class MainActivity extends Activity {
     ));
     setContentView(web);
 
-    CookieManager cookies = CookieManager.getInstance();
-    cookies.setAcceptCookie(true);
-    cookies.setAcceptThirdPartyCookies(web, true);
+    CookieManager cookieManager = CookieManager.getInstance();
+    cookieManager.setAcceptCookie(true);
+    cookieManager.setAcceptThirdPartyCookies(web, true);
 
     WebSettings settings = web.getSettings();
     settings.setJavaScriptEnabled(true);
@@ -46,60 +47,73 @@ public class MainActivity extends Activity {
     settings.setDatabaseEnabled(true);
     settings.setJavaScriptCanOpenWindowsAutomatically(true);
 
-    // Critical: use the actual WebView width as the CSS layout viewport.
-    // This prevents the default wide (approximately 980 CSS px) layout
-    // viewport from bypassing the application's mobile CSS breakpoints.
-    // Keep wide viewport disabled; the Apps Script page is already responsive.
-    settings.setUseWideViewPort(false);
+    // The Apps Script HTML response must include the viewport meta tag.
+    // With that tag, WebView uses the handset CSS viewport and activates
+    // the existing mobile media queries instead of a desktop-width layout.
+    settings.setUseWideViewPort(true);
     settings.setLoadWithOverviewMode(false);
     settings.setTextZoom(100);
+    settings.setInitialScale(0);
+    settings.setMixedContentMode(WebSettings.MIXED_CONTENT_COMPATIBILITY_MODE);
 
     settings.setBuiltInZoomControls(false);
     settings.setDisplayZoomControls(false);
     settings.setAllowFileAccess(false);
     settings.setAllowContentAccess(true);
 
-    // target="_blank" links are directed to the current WebView when
-    // multiple-window support is disabled.
+    // Keep target=_blank/window.open in this WebView so the URL callback
+    // below can route Apps Script internally and all other web links out.
     settings.setSupportMultipleWindows(false);
-    web.setWebChromeClient(new WebChromeClient());
 
+    web.setWebChromeClient(new WebChromeClient());
     web.setWebViewClient(new WebViewClient() {
       @Override
       public boolean shouldOverrideUrlLoading(
           WebView view, WebResourceRequest request) {
-        return routeUrl(request.getUrl().toString());
+        return routeUrl(request.getUrl());
       }
 
       @Override
       public boolean shouldOverrideUrlLoading(WebView view, String url) {
-        return routeUrl(url);
+        return routeUrl(Uri.parse(url));
       }
     });
 
     web.loadUrl(APP_URL);
   }
 
-  private boolean routeUrl(String value) {
-    Uri uri = Uri.parse(value);
+  private boolean routeUrl(Uri uri) {
     String scheme = uri.getScheme() == null
-        ? ""
-        : uri.getScheme().toLowerCase();
-
-    if ("https".equals(scheme) || "http".equals(scheme)) {
-      return false;
-    }
+        ? "" : uri.getScheme().toLowerCase();
+    String host = uri.getHost() == null
+        ? "" : uri.getHost().toLowerCase();
 
     if ("mailto".equals(scheme) || "tel".equals(scheme)) {
-      try {
-        startActivity(new Intent(Intent.ACTION_VIEW, uri));
-      } catch (Exception ignored) {
-        // No compatible handler installed.
+      openExternal(uri);
+      return true;
+    }
+
+    if ("https".equals(scheme) || "http".equals(scheme)) {
+      // Preserve Apps Script HTML Service redirects and Google sign-in
+      // inside WebView. External portal destinations open in the browser.
+      if ("script.google.com".equals(host)
+          || "script.googleusercontent.com".equals(host)
+          || "accounts.google.com".equals(host)) {
+        return false;
       }
+      openExternal(uri);
       return true;
     }
 
     return true;
+  }
+
+  private void openExternal(Uri uri) {
+    try {
+      startActivity(new Intent(Intent.ACTION_VIEW, uri));
+    } catch (Exception ignored) {
+      // No compatible browser, mail client or dialler is installed.
+    }
   }
 
   @Override
