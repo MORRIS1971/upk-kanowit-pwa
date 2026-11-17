@@ -18,7 +18,7 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      - name: Validate JavaScript and manifest
+      - name: Validate JavaScript, manifest and app shell
         run: |
           node --check config.js
           node --check sw.js
@@ -29,9 +29,10 @@ jobs:
           grep -q 'rel="manifest"' index.html
           grep -q "serviceWorker.register" index.html
           grep -q 'appsScriptUrl: ""' config.js
-      - name: Validate required security boundaries
+      - name: Validate staging security boundary
         run: |
           ! grep -Eiq 'UPK_ADMIN_PIN|UPK_ADMIN_PIN_SHA256|UPK_TEST_SPREADSHEET_ID' config.js
-          grep -q 'UPK V2 staging' V2-INTEGRATION.md
-      - name: Report staging validation
-        run: echo "PWA staging static validation passed."
+          grep -q 'V2 staging' V2-INTEGRATION.md
+          test "${GITHUB_REF_NAME}" = "upk-v2-staging"
+      - name: Report
+        run: echo "UPK V2 staging source validation passed."
