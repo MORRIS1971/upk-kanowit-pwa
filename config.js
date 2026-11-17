@@ -1,8 +1,8 @@
 /*
- * Konfigurasi awam PWA.
- * URL deployment web app Apps Script sahaja.
- * Jangan letakkan PIN admin, token, ID spreadsheet atau rahsia lain di sini.
+ * Konfigurasi awam PWA — persekitaran staging V2.
+ * Isi URL /exec hanya selepas Apps Script V2 diuji dan diluluskan.
+ * Jangan letakkan PIN, token, Spreadsheet ID atau rahsia di sini.
  */
 window.UPK_CONFIG = Object.freeze({
-  appsScriptUrl: "https://script.google.com/macros/s/AKfycbzXVqyztogYdP6ggll5Vh0blFRHmpZhRIbJdxOcmSU-vhrrgPkWlIr0rNGvSHjO_Ghb/exec"
+  appsScriptUrl: ""
 });
