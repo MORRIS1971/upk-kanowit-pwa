@@ -35,8 +35,6 @@ jobs:
         with:
           gradle-version: "8.9"
 
-      # GitHub-hosted Ubuntu images already include Android command-line tools.
-      # Use the preinstalled SDK directly instead of downloading/reinitializing it.
       - name: Configure Android SDK
         run: |
           test -d "$ANDROID_HOME"
@@ -45,15 +43,29 @@ jobs:
           echo "$(dirname "$SDKMANAGER")" >> "$GITHUB_PATH"
           echo "$ANDROID_HOME/platform-tools" >> "$GITHUB_PATH"
           yes | "$SDKMANAGER" --licenses >/dev/null || true
-          "$SDKMANAGER" --install "platforms;android-35" "build-tools;35.0.0" "platform-tools"
+          "$SDKMANAGER" --install "platforms;android-34" "build-tools;34.0.0" "platform-tools"
 
       - name: Verify Android SDK
         run: |
-          test -d "$ANDROID_HOME/platforms/android-35"
-          test -x "$ANDROID_HOME/build-tools/35.0.0/aapt"
+          test -d "$ANDROID_HOME/platforms/android-34"
+          test -x "$ANDROID_HOME/build-tools/34.0.0/aapt"
+
+      - name: Validate Android configuration
+        run: |
+          grep -Fq "applicationId 'my.gov.moe.upkkanowit'" app/build.gradle
+          grep -Fq 'minSdk 21' app/build.gradle
+          grep -Fq 'targetSdk 34' app/build.gradle
+          grep -Fq 'android.permission.INTERNET' app/src/main/AndroidManifest.xml
+          grep -Fq 'android:usesCleartextTraffic="false"' app/src/main/AndroidManifest.xml
 
       - name: Build debug APK
-        run: gradle --no-daemon assembleDebug
+        run: gradle --no-daemon clean assembleDebug
+
+      - name: Verify APK output
+        run: |
+          APK="app/build/outputs/apk/debug/app-debug.apk"
+          test -s "$APK"
+          "$ANDROID_HOME/build-tools/34.0.0/aapt" dump badging "$APK" | grep -F "package: name='my.gov.moe.upkkanowit'"
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
