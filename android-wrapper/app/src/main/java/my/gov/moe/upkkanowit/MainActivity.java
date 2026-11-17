@@ -13,7 +13,8 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.graphics.Color;
-import android.view.Window;\nimport org.json.JSONObject;
+import android.view.Window;
+import org.json.JSONObject;
 
 public class MainActivity extends Activity {
   private WebView web;
