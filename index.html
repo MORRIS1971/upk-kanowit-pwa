@@ -34,7 +34,7 @@
 </head>
 <body>
   <header class="top">
-    <img class="crest" src="./icons/icon-192.png" alt="" aria-hidden="true">
+    <a id="crestLink" href="./" title="Buka Portal UPK"><img class="crest" src="./icons/icon-192.png" alt="Buka Portal UPK"></a>
     <div class="brand"><strong>UNIT PENDIDIKAN KHAS</strong><span>PEJABAT PENDIDIKAN DAERAH KANOWIT</span></div>
   </header>
   <main>
@@ -67,6 +67,15 @@
         openButton.disabled = false;
         notice.hidden = true;
         openButton.addEventListener('click', () => location.assign(appUrl));
+        document.getElementById('crestLink').href = appUrl;
+        // Bila dibuka dari ikon yang dipasang (telefon/desktop), terus ke portal.
+        // Tambah ?menu=1 pada URL untuk melihat halaman ini dalam mod app.
+        const installed = ['standalone', 'minimal-ui', 'fullscreen', 'window-controls-overlay']
+          .some(mode => window.matchMedia('(display-mode: ' + mode + ')').matches) || navigator.standalone === true;
+        if (installed && !new URLSearchParams(location.search).has('menu')) {
+          status.textContent = 'Membuka portal...';
+          location.replace(appUrl);
+        }
       } else {
         status.textContent = 'Menunggu URL deployment rasmi Google Apps Script.';
       }
