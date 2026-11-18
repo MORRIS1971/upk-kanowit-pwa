@@ -7,13 +7,13 @@
   <meta name="description" content="PWA rasmi Portal Data dan Pautan Unit Pendidikan Khas PPD Kanowit.">
   <title>APL Data UPK | PPD Kanowit</title>
   <link rel="manifest" href="./manifest.webmanifest">
-  <link rel="icon" href="./icons/icon-192.svg" type="image/svg+xml">
-  <link rel="apple-touch-icon" href="./icons/icon-192.svg">
+  <link rel="icon" href="./icons/icon-192.png" type="image/png">
+  <link rel="apple-touch-icon" href="./icons/icon-192.png">
   <style>
     :root{color-scheme:light;--navy:#17365D;--blue:#2457A7;--gold:#D6A642;--bg:#F4F6FA;--ink:#263445;--muted:#697789;--line:#E4E9F0}
     *{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 Inter,system-ui,-apple-system,"Segoe UI",Arial,sans-serif}
     .top{background:#fff;border-bottom:1px solid var(--line);padding:14px max(20px,calc((100% - 1120px)/2));display:flex;align-items:center;gap:13px}
-    .crest{width:48px;height:48px;border-radius:13px;background:var(--navy);display:grid;place-items:center;color:#fff;font-weight:900;letter-spacing:.5px}
+    .crest{width:48px;height:48px;border-radius:13px;object-fit:cover;display:block}
     .brand strong{display:block;color:var(--navy);font-size:16px;line-height:1.2}.brand span{font-size:12px;color:var(--muted)}
     main{width:min(100% - 32px,980px);margin:28px auto 48px}
     .hero{background:linear-gradient(120deg,#17365D,#2457A7 72%,#3974c4);border-radius:22px;color:#fff;padding:clamp(24px,5vw,48px);box-shadow:0 12px 30px #17365d20}
@@ -34,7 +34,7 @@
 </head>
 <body>
   <header class="top">
-    <div class="crest" aria-hidden="true">UPK</div>
+    <img class="crest" src="./icons/icon-192.png" alt="" aria-hidden="true">
     <div class="brand"><strong>UNIT PENDIDIKAN KHAS</strong><span>PEJABAT PENDIDIKAN DAERAH KANOWIT</span></div>
   </header>
   <main>
@@ -45,7 +45,7 @@
     </section>
     <section class="panel">
       <h2>Portal Data &amp; Pautan UPK</h2>
-      <p class="muted">Versi PWA sedang disediakan. Butang di bawah akan membuka aplikasi utama yang menggunakan Google Apps Script dan Google Sheets sebagai backend.</p>
+      <p class="muted">Tekan butang di bawah untuk membuka aplikasi utama. Pasang aplikasi ini pada telefon untuk akses pantas dari skrin utama.</p>
       <div class="actions">
         <button class="primary" id="openPortal" type="button" disabled>Buka Aplikasi Utama</button>
         <button class="secondary" id="installApp" type="button" hidden>Pasang pada Telefon</button>
@@ -86,7 +86,7 @@
       if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
           navigator.serviceWorker.register('./sw.js').then(() => {
-            status.textContent = 'PWA sedia. Aplikasi utama akan dihubungkan selepas URL deployment disahkan.';
+            status.textContent = 'Aplikasi sedia digunakan.';
           }).catch(() => {
             status.textContent = 'PWA boleh dibuka, tetapi pendaftaran mod luar talian gagal pada pelayar ini.';
           });

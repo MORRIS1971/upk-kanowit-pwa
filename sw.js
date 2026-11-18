@@ -1,13 +1,13 @@
 'use strict';
 
-const CACHE_NAME = 'upk-kanowit-pwa-v1';
+const CACHE_NAME = 'upk-kanowit-pwa-v2';
 const APP_SHELL = [
   './',
   './index.html',
   './manifest.webmanifest',
   './config.js',
-  './icons/icon-192.svg',
-  './icons/icon-512.svg'
+  './icons/icon-192.png',
+  './icons/icon-512.png'
 ];
 
 self.addEventListener('install', event => {
